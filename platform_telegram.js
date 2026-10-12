@@ -4,6 +4,9 @@
    Рекламы нет: showRewarded не объявлен, поэтому кнопки «за рекламу» игра прячет сама. */
 (function () {
   'use strict';
+  var RU_LANGS = ['ru','uk','be','kk','ky','uz','tg','tt','ba'];
+  function normLang(c) { c = String(c || '').toLowerCase().slice(0, 2); return c ? (RU_LANGS.indexOf(c) >= 0 ? 'ru' : 'en') : ''; }
+  function navLang() { try { return normLang(navigator.language || ''); } catch (e) { return ''; } }
   var SAVE_KEY = 'podval-boxer-v1', CHUNK = 4000, MAXCH = 16;
   var CFG = window.LAMP_TG || {};
   var tg = null, booted = false, paused = false;
@@ -90,6 +93,7 @@
   window.AndroidApp = {
     platform: function () { return 'telegram'; },
     version: function () { return 'web'; },
+    getLang: function () { return normLang(tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || navLang() || 'ru'; },
     canPay: function () { return canPay(); },
     getPrice: function (id) { return prices[id] ? String(prices[id]) + ' ⭐' : ''; },
     buy: function (id) {
